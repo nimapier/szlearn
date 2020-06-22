@@ -19,7 +19,28 @@ const createTodolist=async data => {
     })
     return true
 }
+const deleteTodolist=async (id,user_id) => {
+    await Todolist.destroy({
+        where: {
+            id: id,
+            user_id: user_id
+        }
+    })
+    return true
+}
+const updateTodolist=async (id,user_id,status) =>{
+    await Todolist.update({
+        status: status
+    },{
+        where: {
+            id: id,
+            user_id: user_id
+        }
+    })
+}
 module.exports={
     getTodolistById,
-    createTodolist
+    createTodolist,
+    deleteTodolist,
+    updateTodolist
 }

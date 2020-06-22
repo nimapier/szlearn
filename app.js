@@ -13,9 +13,11 @@ const api=require('./server/routes/api')
 const jwt=require('koa-jwt')
 const path=require('path')
 const serve=require('koa-static')
+const histroyApiFallback = require('koa-history-api-fallback');
 app.use(bodyparser())
 app.use(json())
 app.use(logger())
+app.use(histroyApiFallback())
 // app.use(router())
 // app.use(router.routes()).use(router.allowedMethods())
 // router.get('/getjson',async ctx => {
@@ -23,7 +25,7 @@ app.use(logger())
 //     ctx.body=JSON.parse(fs.readFileSync('./static/dawa.json'))
 // })
 
-
+app.use(serve(path.resolve('dist')))
 app.use(async (ctx,next) => {
     try{
         await next()

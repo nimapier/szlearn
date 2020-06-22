@@ -10,7 +10,7 @@
           <el-col :xs="24">
             <template v-if="!Done"> <!--v-if和v-for不能同时在一个元素内使用，因为Vue总会先执行v-for-->
               <template v-for="(item, index) in list">
-                <div class="todo-list" v-if="item.status == false">
+                <div class="todo-list" v-if="item.status == false" :key="index">
                   <span class="item">
                     {{ index + 1 }}. {{ item.content }}
                   </span>
@@ -28,8 +28,8 @@
         </el-tab-pane>
         <el-tab-pane label="已完成事项" name="second">
           <template v-if="count > 0">
-            <template v-for="(item, index) in list">
-              <div class="todo-list" v-if="item.status == true">
+            <template v-for="(item, index) in list" >
+              <div class="todo-list" v-if="item.status == true" :key="index">
                 <span class="item finished">
                   {{ index + 1 }}. {{ item.content }}
                 </span>
@@ -115,25 +115,54 @@ export default {
       })
       this.todos=''
     },
+
     finished(index) {
-      this.$set(this.list[index],'status',true) // 通过set的方法让数组的变动能够让Vue检测到
-      this.$message({
-        type: 'success',
-        message: '任务完成'
+      // this.$set(this.list[index],'status',true) // 通过set的方法让数组的变动能够让Vue检测到
+      this.$http.patch('/apis/todolist/' + this.id + '/' + this.list[index].id + '/' + this.list[index].status).then(res => {
+        if(res.status == 200) {
+          this.$message({
+            type: 'success',
+            message: '任务完成！'
+          })
+          this.getTodolist()
+        }else{
+          this.$message.err('任务状态更新失败!')
+        }
+      },err => {
+        this.$message.err('任务状态更新失败！')
+        console.log(err);
       })
     },
     remove(index) {
-      this.list.splice(index,1);
-      this.$message({
-        type: 'info',
-        message: '任务删除'
+      this.$http.delete('/apis/todolist/' + this.id + '/' + this.list[index].id).then(res => {
+        if(res.status == 200) {
+          this.$message({
+            type: 'success',
+            message: '任务删除成功!'
+          })
+          this.getTodolist()
+        }else {
+          this.$message.err('任务删除失败！')
+        }
+      },err => {
+        this.$message.err('任务删除失败！')
+        console.log(err);
       })
     },
     restore(index) {
-      this.$set(this.list[index],'status',false)
-      this.$message({
-        type: 'info',
-        message: '任务还原'
+      this.$http.patch('/apis/todolist/' + this.id + '/' + this.list[index].id + '/' + this.list[index].status).then(res => {
+        if(res.status == 200) {
+          this.$message({
+            type: 'success',
+            message: '任务还原完成！'
+          })
+          this.getTodolist()
+        }else{
+          this.$message.err('任务状态更新失败!')
+        }
+      },err => {
+        this.$message.err('任务状态更新失败！')
+        console.log(err);
       })
     },
     getUserInfo(){
@@ -158,7 +187,6 @@ export default {
       .catch(err => {
         console.log(err);
       })
-      return getTodolist
     }
   }
 };

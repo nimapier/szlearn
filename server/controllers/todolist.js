@@ -14,7 +14,28 @@ const createTodolist=async (ctx,next) => {
         success
     }
 }
+const deleteTodolist=async (ctx,next) => {
+    const id = ctx.params.id
+    const user_id = ctx.params.user_id
+    const result = await todolist.deleteTodolist(id,user_id)
+    ctx.body={
+        success:true,
+        result
+    }
+}
+const updateTodolist=async (ctx,next) => {
+    const id = ctx.params.id
+    const user_id = ctx.params.user_id
+    const status = ctx.params.status == '0' ? true : false
+    const result = await todolist.updateTodolist(id,user_id,status)
+    ctx.body= {
+        success:true,
+        result
+    }
+}
 module.exports={
     getTodolist,
-    createTodolist
+    createTodolist,
+    deleteTodolist,
+    updateTodolist
 }

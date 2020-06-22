@@ -11,6 +11,7 @@ Vue.use(Router)
 Vue.config.productionTip = false
 import Dawa from './components/Dawa'
 import TodoList from './components/TodoList'
+import HelloWorld from './components/HelloWorld';
 const router =  new Router({
   mode: 'history', // 开启HTML5的history模式，可以让地址栏的url长得跟正常页面跳转的url一样。（不过还需要后端配合，讲Koa的时候会说）
   base: __dirname, 
@@ -26,11 +27,18 @@ const router =  new Router({
     {
       path: '*',
       redirect: '/' // 输入其他不存在的地址自动跳回首页
+    },{
+      path:'/hellosh',
+      component: HelloWorld
     }
   ]
 })
 router.beforeEach((to,from,next) => {
   const token=sessionStorage.getItem('dawa-token')
+  if(to.path==='/hellosh') {
+    next()
+    return
+  }
   if(to.path==='/'){
     if(token!='null'&&token!==null){
       next('/todolist')
