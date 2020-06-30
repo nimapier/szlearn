@@ -5,7 +5,7 @@ import Router from "vue-router";
 // import HelloWorld from '../components/HelloWorld';
 Vue.use(Router);
 export function createRouter() {
-  return new Router({
+  const router = new Router({
     mode: "history",
     base: __dirname,
     routes: [
@@ -30,4 +30,5 @@ export function createRouter() {
       },
     ],
   });
+  return router
 }

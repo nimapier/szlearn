@@ -51,6 +51,10 @@
 <script>
 import jwt from 'jsonwebtoken';
 export default {
+  // vue2.6新增option，见ssr官网英文文档
+  serverPrefetch () {
+    return this.getTodolist()
+  },
   created() {
     const userInfo=this.getUserInfo()
     // console.log(userInfo);
@@ -66,9 +70,8 @@ export default {
   data () {
     return {
       name: '',
-      todos: '',
       activeName: 'first',
-      list:[],
+      todos: '',
       count: 0,
       id:''
     };
@@ -86,6 +89,9 @@ export default {
       }else{
         return false
       }
+    },
+    list() {
+      return this.$store.getters.list
     }
   },
 
@@ -166,8 +172,9 @@ export default {
       })
     },
     getUserInfo(){
-      const token=sessionStorage.getItem('dawa-token')
-      if(token!==null&&token!=='null'){
+      // const token=sessionStorage.getItem('dawa-token')
+      const token = this.$store.getters.token
+      if(token!==''){
         let decode=jwt.decode(token)
         return decode
       }else{
@@ -175,18 +182,7 @@ export default {
       }
     },
     getTodolist(){
-      // console.log(this.$http.get('/api/todolist/1'));
-      this.$http.get('/apis/todolist/'+this.id)
-      .then((result) => {
-        if(result.status==200){
-          this.list=result.data.result
-        }else{
-          this.$message.error('获取列表失败')
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      return this.$store.dispatch('fetchList',this.id)
     }
   }
 };

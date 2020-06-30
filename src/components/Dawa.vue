@@ -39,7 +39,8 @@ export default {
           this.$http.post('/auth/user',obj)
             .then((res)=>{
               if(res.data.success){
-                sessionStorage.setItem('dawa-token',res.data.token)//用sessionStorage把token存下来
+                // window.sessionStorage.setItem('dawa-token',res.data.token)//用sessionStorage把token存下来
+                this.$store.commit('SET_TOKEN',res.data.token)
                 this.$message({
                   type:'success',
                   message:'登陆成功!'
@@ -47,11 +48,11 @@ export default {
                 this.$router.push('/todolist')
               }else{
                 this.$message.error(res.data.info)//登陆失败，显示提示语
-                sessionStorage.setItem('dawa-token',null)//将token清空
+                this.$store.commit('SET_TOKEN',res.data.token)//将token清空
               }
             },(err)=>{
               this.$message.error('请求错误')
-              sessionStorage.setItem('dawa-token',null)
+              this.$store.commit('SET_TOKEN',res.data.token)
             })
       }
   },
