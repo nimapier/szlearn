@@ -11,7 +11,8 @@ const path = require("path");
 const serverBundle = require("./dist/vue-ssr-server-bundle.json");
 const clientManifest = require("./dist/vue-ssr-client-manifest.json");
 const { createBundleRenderer } = require("vue-server-renderer");
-app.use(serve(path.resolve("dist")));
+const context = require("koa/lib/context");
+app.use(serve(path.resolve(__dirname)));
 const renderer = createBundleRenderer(serverBundle, {
   runInNewContext: false,
   template: require("fs").readFileSync(
@@ -59,6 +60,9 @@ app.use(async (ctx, next) => {
   ctx.status = status ? status : ctx.status;
   ctx.body = html;
 });
+// app.use(async (context,next) => {
+//   context.url
+// })
 app.on('error', (err) => {
     console.error('Server error: \n%s\n%s ', err.stack || '')
   })

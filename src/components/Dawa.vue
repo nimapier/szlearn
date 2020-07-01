@@ -36,7 +36,7 @@ export default {
             name:this.account,
             password:this.password
           }
-          this.$http.post('/auth/user',obj)
+          this.API.toLogin(obj)
             .then((res)=>{
               if(res.data.success){
                 // window.sessionStorage.setItem('dawa-token',res.data.token)//用sessionStorage把token存下来
